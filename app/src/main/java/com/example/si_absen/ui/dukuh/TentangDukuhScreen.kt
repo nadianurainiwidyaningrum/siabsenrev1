@@ -1,36 +1,46 @@
 package com.example.si_absen.ui.dukuh
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.si_absen.ui.theme.BackgroundLight
-import com.example.si_absen.ui.theme.PrimaryBlue
-import com.example.si_absen.ui.theme.SurfaceLight
-import com.example.si_absen.ui.theme.TextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TentangDukuhScreen() {
 
     Scaffold(
-        containerColor = BackgroundLight,
+        containerColor = MaterialTheme.colorScheme.background,
 
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Tentang Aplikasi",
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Column {
+                        Text(
+                            text = "Tentang Aplikasi",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Text(
+                            text = "Informasi SI ABSEN",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             )
         }
@@ -41,13 +51,17 @@ fun TentangDukuhScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
+            // HEADER APLIKASI
+
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
+                shape = MaterialTheme.shapes.extraLarge,
                 colors = CardDefaults.cardColors(
-                    containerColor = PrimaryBlue
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
 
@@ -58,202 +72,401 @@ fun TentangDukuhScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Icon(
-                        imageVector = Icons.Default.PhoneAndroid,
-                        contentDescription = null,
-                        tint = SurfaceLight,
-                        modifier = Modifier.size(60.dp)
-                    )
+                    Surface(
+                        modifier = Modifier.size(76.dp),
+                        shape = MaterialTheme.shapes.large,
+                        color = MaterialTheme.colorScheme.onPrimary
+                            .copy(alpha = 0.15f)
+                    ) {
+
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            Icon(
+                                imageVector = Icons.Default.PhoneAndroid,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.size(42.dp)
+                            )
+                        }
+                    }
 
                     Spacer(
-                        modifier = Modifier.height(12.dp)
+                        modifier = Modifier.height(16.dp)
                     )
 
                     Text(
                         text = "SI ABSEN",
-                        color = SurfaceLight,
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(4.dp)
+                    )
+
+                    Text(
+                        text = "Sistem Informasi Absensi",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                            .copy(alpha = 0.9f)
                     )
 
                     Text(
                         text = "Kalurahan Purwobinangun",
-                        color = SurfaceLight,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimary
+                            .copy(alpha = 0.8f)
                     )
+
+                    Spacer(
+                        modifier = Modifier.height(14.dp)
+                    )
+
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.onPrimary
+                            .copy(alpha = 0.12f)
+                    ) {
+
+                        Row(
+                            modifier = Modifier.padding(
+                                horizontal = 12.dp,
+                                vertical = 6.dp
+                            ),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Icon(
+                                imageVector = Icons.Default.VerifiedUser,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+
+                            Spacer(
+                                modifier = Modifier.width(6.dp)
+                            )
+
+                            Text(
+                                text = "Aplikasi Resmi",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
                 }
+            }
+
+
+            // INFORMASI APLIKASI
+
+            AboutSectionCard(
+                title = "Informasi Aplikasi",
+                icon = Icons.Default.Info
+            ) {
+
+                AboutInfoRow(
+                    label = "Versi Aplikasi",
+                    value = "1.0.0"
+                )
+
+                AboutInfoRow(
+                    label = "Build",
+                    value = "2026.01"
+                )
+
+                AboutInfoRow(
+                    label = "Platform",
+                    value = "Android"
+                )
+
+                AboutInfoRow(
+                    label = "Status",
+                    value = "Production",
+                    valueColor = MaterialTheme.colorScheme.primary
+                )
+            }
+
+
+            // INSTANSI
+            AboutSectionCard(
+                title = "Instansi",
+                icon = Icons.Default.LocationCity
+            ) {
+
+                AboutInfoRow(
+                    label = "Nama",
+                    value = "Kalurahan Purwobinangun"
+                )
+
+                AboutInfoRow(
+                    label = "Kapanewon",
+                    value = "Pakem"
+                )
+
+                AboutInfoRow(
+                    label = "Kabupaten",
+                    value = "Sleman"
+                )
+
+                AboutInfoRow(
+                    label = "Provinsi",
+                    value = "Daerah Istimewa Yogyakarta"
+                )
+            }
+
+            // DESKRIPSI
+
+
+            AboutSectionCard(
+                title = "Tentang SI ABSEN",
+                icon = Icons.Default.Business
+            ) {
+
+                Text(
+                    text = "SI ABSEN merupakan aplikasi absensi pegawai dan dukuh berbasis Android yang digunakan untuk membantu proses pencatatan kehadiran secara digital.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(
+                    modifier = Modifier.height(10.dp)
+                )
+
+                Text(
+                    text = "Aplikasi ini menyediakan fitur absensi masuk, absensi pulang, absensi kegiatan, monitoring lokasi, pengelolaan kegiatan dusun, rekapitulasi kehadiran, notifikasi, serta pengelolaan administrasi Kalurahan Purwobinangun.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            //FITUR UTAMA
+
+
+            AboutSectionCard(
+                title = "Fitur Utama",
+                icon = Icons.Default.Android
+            ) {
+
+                AboutFeatureRow(
+                    title = "Absensi Digital",
+                    description = "Mencatat absensi masuk, pulang, dan kegiatan."
+                )
+
+                AboutFeatureRow(
+                    title = "Monitoring Lokasi",
+                    description = "Validasi lokasi berdasarkan titik dan radius presensi."
+                )
+
+                AboutFeatureRow(
+                    title = "Kegiatan Dusun",
+                    description = "Mengelola pengajuan dan riwayat kegiatan wilayah."
+                )
+
+                AboutFeatureRow(
+                    title = "Rekap Kehadiran",
+                    description = "Melihat ringkasan kehadiran dan aktivitas."
+                )
+            }
+
+
+            // COPYRIGHT
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 4.dp,
+                        bottom = 8.dp
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                Text(
+                    text = "SI ABSEN • Versi 1.0.0",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium
+                )
+
+                Spacer(
+                    modifier = Modifier.height(4.dp)
+                )
+
+                Text(
+                    text = "© 2026 Kalurahan Purwobinangun",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+// SECTION CARD
+
+@Composable
+private fun AboutSectionCard(
+    title: String,
+    icon: ImageVector,
+    content: @Composable ColumnScope.() -> Unit
+) {
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+
+        Column(
+            modifier = Modifier.padding(18.dp)
+        ) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Surface(
+                    modifier = Modifier.size(42.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                }
+
+                Spacer(
+                    modifier = Modifier.width(12.dp)
+                )
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
 
             Spacer(
                 modifier = Modifier.height(16.dp)
             )
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = SurfaceLight
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 3.dp
-                )
-            ) {
 
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
+            content()
+        }
+    }
+}
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+// INFO ROW
 
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null,
-                            tint = PrimaryBlue
-                        )
+@Composable
+private fun AboutInfoRow(
+    label: String,
+    value: String,
+    valueColor: androidx.compose.ui.graphics.Color =
+        MaterialTheme.colorScheme.onSurface
+) {
 
-                        Spacer(
-                            modifier = Modifier.width(8.dp)
-                        )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
+    ) {
 
-                        Text(
-                            text = "Informasi Aplikasi",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
+        Text(
+            text = label,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
-                    Spacer(
-                        modifier = Modifier.height(12.dp)
-                    )
+        Spacer(
+            modifier = Modifier.width(16.dp)
+        )
 
-                    Text(
-                        text = "Versi Aplikasi : 1.0.0",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+        Text(
+            text = value,
+            modifier = Modifier.weight(1.2f),
+            style = MaterialTheme.typography.bodyMedium,
+            color = valueColor,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
 
-                    Text(
-                        text = "Build : 2026.01",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+// FEATURE ROW
 
-                    Text(
-                        text = "Platform : Android",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+@Composable
+private fun AboutFeatureRow(
+    title: String,
+    description: String
+) {
 
-                    Text(
-                        text = "Status : Production",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary
-                    )
-                }
-            }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 7.dp),
+        verticalAlignment = Alignment.Top
+    ) {
 
-            Spacer(
-                modifier = Modifier.height(12.dp)
+        Surface(
+            modifier = Modifier
+                .padding(top = 2.dp)
+                .size(8.dp),
+            shape = MaterialTheme.shapes.small,
+            color = MaterialTheme.colorScheme.primary
+        ) {}
+
+        Spacer(
+            modifier = Modifier.width(12.dp)
+        )
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
             )
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = SurfaceLight
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 3.dp
-                )
-            ) {
-
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Icon(
-                            imageVector = Icons.Default.LocationCity,
-                            contentDescription = null,
-                            tint = PrimaryBlue
-                        )
-
-                        Spacer(
-                            modifier = Modifier.width(8.dp)
-                        )
-
-                        Text(
-                            text = "Instansi",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-
-                    Spacer(
-                        modifier = Modifier.height(12.dp)
-                    )
-
-                    Text(
-                        text = "Kalurahan Purwobinangun",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Text(
-                        text = "Kapanewon Pakem",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Text(
-                        text = "Kabupaten Sleman",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Text(
-                        text = "Daerah Istimewa Yogyakarta",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary
-                    )
-                }
-            }
 
             Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = SurfaceLight
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 3.dp
-                )
-            ) {
-
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-
-                    Text(
-                        text = "Deskripsi",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(8.dp)
-                    )
-
-                    Text(
-                        text = "SI ABSEN merupakan aplikasi absensi pegawai dan dukuh berbasis Android yang digunakan untuk mencatat kehadiran, monitoring lokasi, kegiatan dusun, rekapitulasi kehadiran, serta pengelolaan administrasi Kalurahan Purwobinangun.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary
-                    )
-                }
-            }
-
-            Spacer(
-                modifier = Modifier.height(16.dp)
+                modifier = Modifier.height(2.dp)
             )
 
             Text(
-                text = "© 2026 Kalurahan Purwobinangun",
-                modifier = Modifier.fillMaxWidth(),
+                text = description,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

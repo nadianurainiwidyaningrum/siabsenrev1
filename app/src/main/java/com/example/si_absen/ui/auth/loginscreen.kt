@@ -1,20 +1,24 @@
-package com.example.si_absen.auth
+package com.example.si_absen.ui.auth
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.si_absen.ui.navigation.Screen
-import com.example.si_absen.ui.theme.BackgroundLight
-import com.example.si_absen.ui.theme.PrimaryBlue
-import com.example.si_absen.ui.theme.SurfaceLight
-import com.example.si_absen.ui.theme.TextSecondary
 
 @Composable
 fun LoginScreen(
@@ -29,209 +33,394 @@ fun LoginScreen(
         mutableStateOf("")
     }
 
+    var passwordVisible by remember {
+        mutableStateOf(false)
+    }
+
     var errorMessage by remember {
         mutableStateOf("")
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BackgroundLight),
-        contentAlignment = Alignment.Center
-    ) {
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
 
-        Card(
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background
+    ) { innerPadding ->
+
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            shape = RoundedCornerShape(24.dp),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            ),
-            colors = CardDefaults.cardColors(
-                containerColor = SurfaceLight
-            )
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 24.dp),
+            contentAlignment = Alignment.Center
         ) {
 
-            Column(
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(28.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 4.dp
+                )
             ) {
 
-                Text(
-                    text = "SI ABSEN",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = PrimaryBlue
-                )
-
-                Spacer(
-                    modifier = Modifier.height(8.dp)
-                )
-
-                Text(
-                    text = "Sistem Informasi Absensi Pegawai",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Text(
-                    text = "Kalurahan Purwobinangun",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary
-                )
-
-                Spacer(
-                    modifier = Modifier.height(32.dp)
-                )
-
-                OutlinedTextField(
-                    value = nik,
-                    onValueChange = {
-                        nik = it
-                        errorMessage = ""
-                    },
-                    label = {
-                        Text(
-                            text = "NIK",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(
-                    modifier = Modifier.height(16.dp)
-                )
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = {
-                        password = it
-                        errorMessage = ""
-                    },
-                    label = {
-                        Text(
-                            text = "Password",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    },
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(
-                    modifier = Modifier.height(24.dp)
-                )
-
-                Button(
-                    onClick = {
-
-                        errorMessage = ""
-
-                        when {
-
-                            nik == "111" &&
-                                    password == "admin" -> {
-
-                                navController.navigate(
-                                    Screen.DashboardAdmin.route
-                                )
-                            }
-
-                            nik == "222" &&
-                                    password == "pegawai" -> {
-
-                                navController.navigate(
-                                    Screen.DashboardPegawai.route
-                                )
-                            }
-
-                            nik == "333" &&
-                                    password == "dukuh" -> {
-
-                                navController.navigate(
-                                    Screen.DashboardDukuh.route
-                                )
-                            }
-
-                            else -> {
-                                errorMessage =
-                                    "NIK atau Password salah"
-                            }
-                        }
-                    },
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = PrimaryBlue
-                    )
+                        .padding(28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Text(
-                        text = "MASUK SISTEM",
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
-                if (errorMessage.isNotEmpty()) {
+                    // HEADER
+
+                    Surface(
+                        modifier = Modifier.size(76.dp),
+                        shape = RoundedCornerShape(22.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer
+                    ) {
+
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Login,
+                                contentDescription = "Login",
+                                modifier = Modifier.size(38.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
 
                     Spacer(
-                        modifier = Modifier.height(12.dp)
+                        modifier = Modifier.height(18.dp)
                     )
 
                     Text(
-                        text = errorMessage,
+                        text = "SI ABSEN",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(6.dp)
+                    )
+
+                    Text(
+                        text = "Sistem Informasi Absensi Pegawai",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                }
-
-                Spacer(
-                    modifier = Modifier.height(8.dp)
-                )
-                TextButton(
-                    onClick = {
-                        navController.navigate(
-                            Screen.ForgotPassword.route
-                        )
-                    }
-                ) {
 
                     Text(
-                        text = "Lupa Password?",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = PrimaryBlue
+                        text = "Kalurahan Purwobinangun",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                }
-                TextButton(
-                    onClick = {
-                        navController.navigate(
-                            Screen.Register.route
+
+                    Spacer(
+                        modifier = Modifier.height(28.dp)
+                    )
+                    // NIK
+
+                    OutlinedTextField(
+                        value = nik,
+                        onValueChange = {
+
+                            nik = it.filter { char ->
+                                char.isDigit()
+                            }
+
+                            errorMessage = ""
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {
+                            Text("NIK")
+                        },
+                        placeholder = {
+                            Text("Masukkan NIK")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Badge,
+                                contentDescription = null
+                            )
+                        },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        isError = errorMessage.isNotEmpty(),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+
+                    // PASSWORD
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = {
+
+                            password = it
+                            errorMessage = ""
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {
+                            Text("Password")
+                        },
+                        placeholder = {
+                            Text("Masukkan password")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = {
+
+                            IconButton(
+                                onClick = {
+                                    passwordVisible = !passwordVisible
+                                }
+                            ) {
+
+                                Icon(
+                                    imageVector = if (passwordVisible) {
+                                        Icons.Default.VisibilityOff
+                                    } else {
+                                        Icons.Default.Visibility
+                                    },
+                                    contentDescription = if (passwordVisible) {
+                                        "Sembunyikan password"
+                                    } else {
+                                        "Tampilkan password"
+                                    }
+                                )
+                            }
+                        },
+                        visualTransformation = if (passwordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password
+                        ),
+                        singleLine = true,
+                        isError = errorMessage.isNotEmpty(),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+
+                   // LUPA PASSWORD
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+
+                        TextButton(
+                            onClick = {
+
+                                navController.navigate(
+                                    Screen.ForgotPassword.route
+                                )
+                            }
+                        ) {
+
+                            Text(
+                                text = "Lupa Password?",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
+
+                    // ERROR
+
+                    if (errorMessage.isNotEmpty()) {
+
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.errorContainer
+                        ) {
+
+                            Text(
+                                text = errorMessage,
+                                modifier = Modifier.padding(12.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                        }
+
+                        Spacer(
+                            modifier = Modifier.height(16.dp)
                         )
                     }
-                ) {
+
+                   // LOGIN BUTTON
+
+                    Button(
+                        onClick = {
+
+                            errorMessage = ""
+
+                            when {
+
+                                nik.isBlank() -> {
+
+                                    errorMessage =
+                                        "NIK wajib diisi."
+                                }
+
+                                password.isBlank() -> {
+
+                                    errorMessage =
+                                        "Password wajib diisi."
+                                }
+
+                                else -> {
+
+                                    isLoading = true
+
+                                    /*
+                                     * LOGIN SEMENTARA / DUMMY
+                                     *
+                                     * Nanti bagian ini diganti API login.
+                                     */
+
+                                    when {
+
+                                        nik == "111" &&
+                                                password == "admin" -> {
+
+                                            isLoading = false
+
+                                            navController.navigate(
+                                                Screen.DashboardAdmin.route
+                                            )
+                                        }
+
+                                        nik == "222" &&
+                                                password == "pegawai" -> {
+
+                                            isLoading = false
+
+                                            navController.navigate(
+                                                Screen.DashboardPegawai.route
+                                            )
+                                        }
+
+                                        nik == "333" &&
+                                                password == "dukuh" -> {
+
+                                            isLoading = false
+
+                                            navController.navigate(
+                                                Screen.DashboardDukuh.route
+                                            )
+                                        }
+
+                                        else -> {
+
+                                            isLoading = false
+
+                                            errorMessage =
+                                                "NIK atau password salah."
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        enabled = !isLoading,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+
+                        if (isLoading) {
+
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(22.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+
+                        } else {
+
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Login,
+                                contentDescription = null
+                            )
+
+                            Spacer(
+                                modifier = Modifier.width(8.dp)
+                            )
+
+                            Text(
+                                text = "MASUK SISTEM",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
+
+                    Spacer(
+                        modifier = Modifier.height(16.dp)
+                    )
+
+                    // REGISTER
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Text(
+                            text = "Belum punya akun?",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        TextButton(
+                            onClick = {
+
+                                navController.navigate(
+                                    Screen.Register.route
+                                )
+                            }
+                        ) {
+
+                            Text(
+                                text = "Buat Akun",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
+
+                    Spacer(
+                        modifier = Modifier.height(20.dp)
+                    )
+
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(14.dp)
+                    )
 
                     Text(
-                        text = "Buat Akun",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = PrimaryBlue
+                        text = "© 2026 Kalurahan Purwobinangun",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
-                Spacer(
-                    modifier = Modifier.height(24.dp)
-                )
-
-                Text(
-                    text = "© Kalurahan Purwobinangun",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TextSecondary
-                )
             }
         }
     }

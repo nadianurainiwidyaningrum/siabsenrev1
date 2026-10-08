@@ -2,305 +2,1096 @@ package com.example.si_absen.ui.screen.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Assessment
+import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.PendingActions
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.VerifiedUser
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.si_absen.ui.navigation.Screen
-import com.example.si_absen.ui.theme.BackgroundLight
-import com.example.si_absen.ui.theme.PrimaryBlue
-import com.example.si_absen.ui.theme.SurfaceLight
 
-data class AdminMenu(
+data class AdminMenuItem(
     val title: String,
+    val description: String,
+    val icon: ImageVector,
     val route: String
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardAdminScreen(
     navController: NavController
 ) {
 
-    val menuList = listOf(
-
-        AdminMenu(
-            title = "Data Pegawai",
+    val menuItems = listOf(
+        AdminMenuItem(
+            title = "Pengguna",
+            description = "Kelola pegawai dan dukuh",
+            icon = Icons.Default.Groups,
             route = Screen.DataPegawai.route
         ),
-
-        AdminMenu(
-            title = "Data Dukuh",
-            route = Screen.DataDukuh.route
-        ),
-
-        AdminMenu(
+        AdminMenuItem(
             title = "Monitoring Absensi",
+            description = "Pantau kehadiran pengguna",
+            icon = Icons.Default.VerifiedUser,
             route = Screen.MonitoringAbsensi.route
         ),
-
-        AdminMenu(
-            title = "Monitoring Lokasi",
-            route = Screen.MonitoringLokasi.route
-        ),
-
-        AdminMenu(
-            title = "Validasi Absensi",
-            route = Screen.ValidasiAbsensi.route
-        ),
-
-        AdminMenu(
-            title = "Statistik",
-            route = Screen.Statistik.route
-        ),
-
-        AdminMenu(
+        AdminMenuItem(
             title = "Laporan",
+            description = "Kelola laporan absensi",
+            icon = Icons.Default.Assessment,
             route = Screen.Laporan.route
         ),
-
-        AdminMenu(
+        AdminMenuItem(
             title = "Pengumuman",
+            description = "Kelola informasi sistem",
+            icon = Icons.Default.Campaign,
             route = Screen.PengumumanAdmin.route
-        ),
-
-        AdminMenu(
-            title = "Pengaturan",
-            route = Screen.PengaturanAdmin.route
-        ),
-
-        AdminMenu(
-            title = "Profil",
-            route = Screen.ProfilAdmin.route
         )
     )
 
     Scaffold(
-
-        topBar = {
-
-            TopAppBar(
-
-                title = {
-
-                    Column {
-
-                        Text(
-                            text = "Dashboard Admin",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
-                        Text(
-                            text = "Kalurahan Purwobinangun",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            AdminBottomNavigation(
+                navController = navController
             )
         }
-
     ) { paddingValues ->
 
-        Column(
-
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .background(BackgroundLight)
-                .padding(16.dp)
-
+                .padding(paddingValues),
+            contentPadding = PaddingValues(
+                bottom = 24.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            // ==============================
-            // RINGKASAN HARI INI
-            // ==============================
+            // HEADER
 
-            Text(
-                text = "Ringkasan Hari Ini",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-
-                StatistikCard(
-                    title = "Pegawai",
-                    value = "35",
-                    modifier = Modifier.weight(1f)
-                )
-
-                StatistikCard(
-                    title = "Dukuh",
-                    value = "8",
-                    modifier = Modifier.weight(1f)
+            item {
+                AdminHeader(
+                    onProfileClick = {
+                        navController.navigate(
+                            Screen.ProfilAdmin.route
+                        )
+                    }
                 )
             }
 
-            Spacer(
-                modifier = Modifier.height(12.dp)
+            // STATUS SISTEM
+
+            item {
+                AdminSystemCard(
+                    onClick = {
+                        navController.navigate(
+                            Screen.MonitoringAbsensi.route
+                        )
+                    }
+                )
+            }
+
+            // AKSI CEPAT
+
+            item {
+                Column(
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp
+                    )
+                ) {
+                    Text(
+                        text = "Aksi Cepat",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        AdminQuickActionCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Groups,
+                            title = "Pengguna",
+                            description = "Kelola data",
+                            onClick = {
+                                navController.navigate(
+                                    Screen.DataPegawai.route
+                                )
+                            }
+                        )
+
+                        AdminQuickActionCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.VerifiedUser,
+                            title = "Absensi",
+                            description = "Monitoring",
+                            onClick = {
+                                navController.navigate(
+                                    Screen.MonitoringAbsensi.route
+                                )
+                            }
+                        )
+                    }
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        AdminQuickActionCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Assessment,
+                            title = "Laporan",
+                            description = "Buat laporan",
+                            onClick = {
+                                navController.navigate(
+                                    Screen.Laporan.route
+                                )
+                            }
+                        )
+
+                        AdminQuickActionCard(
+                            modifier = Modifier.weight(1f),
+                            icon = Icons.Default.Campaign,
+                            title = "Pengumuman",
+                            description = "Kelola info",
+                            onClick = {
+                                navController.navigate(
+                                    Screen.PengumumanAdmin.route
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
+            // STATISTIK
+
+            item {
+                Column(
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp
+                    )
+                ) {
+                    Text(
+                        text = "Ringkasan",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+
+                    AdminStatCard(
+                        title = "Pegawai",
+                        value = "35",
+                        subtitle = "Pengguna aktif",
+                        icon = Icons.Default.Groups
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+
+                    AdminStatCard(
+                        title = "Dukuh",
+                        value = "8",
+                        subtitle = "Pengguna aktif",
+                        icon = Icons.Default.Person
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+
+                    AdminStatCard(
+                        title = "Hadir Hari Ini",
+                        value = "40",
+                        subtitle = "Data kehadiran",
+                        icon = Icons.Default.CheckCircle
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+
+                    AdminStatCard(
+                        title = "Pending",
+                        value = "3",
+                        subtitle = "Perlu sinkronisasi",
+                        icon = Icons.Default.PendingActions
+                    )
+                }
+            }
+
+            // MENU UTAMA
+
+            item {
+                Column(
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp
+                    )
+                ) {
+                    Text(
+                        text = "Menu Utama",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(3.dp)
+                    )
+
+                    Text(
+                        text = "Akses pengelolaan sistem SI ABSEN.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            items(
+                items = menuItems,
+                key = {
+                    it.title
+                }
+            ) { item ->
+
+                AdminMenuCard(
+                    item = item,
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp
+                    ),
+                    onClick = {
+                        navController.navigate(
+                            item.route
+                        )
+                    }
+                )
+            }
+
+            // STATUS
+
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(44.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(
+                                    MaterialTheme.colorScheme.primary.copy(
+                                        alpha = 0.12f
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.VerifiedUser,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        Spacer(
+                            modifier = Modifier.width(12.dp)
+                        )
+
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Status Sistem",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+
+                            Spacer(
+                                modifier = Modifier.height(2.dp)
+                            )
+
+                            Text(
+                                text = "Sistem berjalan normal",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+
+                            Text(
+                                text = "Data absensi siap dipantau dan dikelola.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                    alpha = 0.8f
+                                )
+                            )
+                        }
+
+                        Surface(
+                            shape = RoundedCornerShape(50.dp),
+                            color = MaterialTheme.colorScheme.primary
+                        ) {
+                            Text(
+                                text = "Online",
+                                modifier = Modifier.padding(
+                                    horizontal = 10.dp,
+                                    vertical = 6.dp
+                                ),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+                }
+            }
+
+            // PROFIL
+
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(44.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    MaterialTheme.colorScheme.primaryContainer
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+
+                        Spacer(
+                            modifier = Modifier.width(12.dp)
+                        )
+
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Administrator",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Text(
+                                text = "Kalurahan Purwobinangun",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        OutlinedButton(
+                            onClick = {
+                                navController.navigate(
+                                    Screen.ProfilAdmin.route
+                                )
+                            },
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("Profil")
+                        }
+                    }
+                }
+            }
+
+            // INFO
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 2.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(18.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier.width(8.dp)
+                    )
+
+                    Text(
+                        text = "SI ABSEN • Panel Administrasi",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            item {
+                Spacer(
+                    modifier = Modifier.height(8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminHeader(
+    onProfileClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(
+                RoundedCornerShape(
+                    bottomStart = 28.dp,
+                    bottomEnd = 28.dp
+                )
             )
+            .background(
+                MaterialTheme.colorScheme.primary
+            )
+            .padding(
+                horizontal = 20.dp,
+                vertical = 22.dp
+            )
+    ) {
+        Column {
+
+            // TOP BAR
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                verticalAlignment = Alignment.CenterVertically
             ) {
-
-                StatistikCard(
-                    title = "Hadir",
-                    value = "40",
+                Column(
                     modifier = Modifier.weight(1f)
-                )
+                ) {
+                    Text(
+                        text = "SI ABSEN",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
 
-                StatistikCard(
-                    title = "Belum Hadir",
-                    value = "3",
-                    modifier = Modifier.weight(1f)
-                )
+                    Text(
+                        text = "Kalurahan Purwobinangun",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimary.copy(
+                            alpha = 0.78f
+                        )
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(
+                            MaterialTheme.colorScheme.onPrimary.copy(
+                                alpha = 0.14f
+                            )
+                        )
+                        .clickable {
+                            onProfileClick()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profil",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(23.dp)
+                    )
+                }
             }
 
             Spacer(
                 modifier = Modifier.height(24.dp)
             )
 
-            // ==============================
-            // MENU ADMIN
-            // ==============================
-
             Text(
-                text = "Menu Admin",
-                style = MaterialTheme.typography.titleMedium
+                text = "Selamat datang 👋",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary.copy(
+                    alpha = 0.82f
+                )
             )
 
             Spacer(
-                modifier = Modifier.height(12.dp)
+                modifier = Modifier.height(3.dp)
             )
 
-            LazyVerticalGrid(
+            Text(
+                text = "Administrator",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
 
-                columns = GridCells.Fixed(2),
+            Spacer(
+                modifier = Modifier.height(4.dp)
+            )
 
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary.copy(
+                        alpha = 0.8f
+                    ),
+                    modifier = Modifier.size(15.dp)
+                )
 
-                items(menuList) { menu ->
+                Spacer(
+                    modifier = Modifier.width(4.dp)
+                )
 
-                    Card(
-
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(90.dp)
-                            .clickable {
-
-                                navController.navigate(
-                                    menu.route
-                                )
-                            },
-
-                        shape = RoundedCornerShape(16.dp),
-
-                        colors = CardDefaults.cardColors(
-                            containerColor = SurfaceLight
-                        ),
-
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 4.dp
-                        )
-                    ) {
-
-                        Box(
-
-                            modifier = Modifier.fillMaxSize(),
-
-                            contentAlignment = Alignment.Center
-
-                        ) {
-
-                            Text(
-                                text = menu.title,
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
-                    }
-                }
+                Text(
+                    text = "Pengelolaan Sistem",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(
+                        alpha = 0.82f
+                    )
+                )
             }
         }
     }
 }
 
-// ======================================================
-// STATISTIK CARD
-// ======================================================
-
 @Composable
-fun StatistikCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier
+private fun AdminSystemCard(
+    onClick: () -> Unit
 ) {
-
     Card(
-
-        modifier = modifier,
-
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = PrimaryBlue
+            containerColor = MaterialTheme.colorScheme.surface
         ),
-
-        shape = RoundedCornerShape(16.dp)
-
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
     ) {
-
         Column(
-
-            modifier = Modifier.padding(16.dp)
-
+            modifier = Modifier.padding(18.dp)
         ) {
 
-            Text(
-                text = title,
-                color = SurfaceLight,
-                style = MaterialTheme.typography.bodyMedium
+            // STATUS
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(46.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.VerifiedUser,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(25.dp)
+                    )
+                }
+
+                Spacer(
+                    modifier = Modifier.width(12.dp)
+                )
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Status Sistem",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Text(
+                        text = "Sistem Aktif",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(50.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                    Text(
+                        text = "Online",
+                        modifier = Modifier.padding(
+                            horizontal = 10.dp,
+                            vertical = 6.dp
+                        ),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                AdminSystemData(
+                    modifier = Modifier.weight(1f),
+                    title = "Absensi Hari Ini",
+                    value = "40",
+                    icon = Icons.Default.CheckCircle
+                )
+
+                AdminSystemData(
+                    modifier = Modifier.weight(1f),
+                    title = "Data Pending",
+                    value = "3",
+                    icon = Icons.Default.PendingActions
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            Button(
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.VerifiedUser,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+
+                Spacer(
+                    modifier = Modifier.width(8.dp)
+                )
+
+                Text("Lihat Monitoring")
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminSystemData(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    icon: ImageVector
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(19.dp)
             )
 
             Spacer(
-                modifier = Modifier.height(8.dp)
+                modifier = Modifier.width(8.dp)
             )
 
-            Text(
-                text = value,
-                color = SurfaceLight,
-                style = MaterialTheme.typography.headlineMedium
-            )
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun AdminQuickActionCard(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    title: String,
+    description: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier.clickable {
+            onClick()
+        },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(13.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(11.dp))
+                    .background(
+                        MaterialTheme.colorScheme.primaryContainer
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(21.dp)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.width(9.dp)
+            )
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminStatCard(
+    title: String,
+    value: String,
+    subtitle: String,
+    icon: ImageVector
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(RoundedCornerShape(11.dp))
+                    .background(
+                        MaterialTheme.colorScheme.primaryContainer
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(21.dp)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.width(12.dp)
+            )
+
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminMenuCard(
+    item: AdminMenuItem,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(RoundedCornerShape(13.dp))
+                    .background(
+                        MaterialTheme.colorScheme.primaryContainer
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(23.dp)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.width(12.dp)
+            )
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(
+                    modifier = Modifier.height(3.dp)
+                )
+
+                Text(
+                    text = item.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminBottomNavigation(
+    navController: NavController
+) {
+    NavigationBar(
+        modifier = Modifier.navigationBarsPadding()
+    ) {
+        NavigationBarItem(
+            selected = true,
+            onClick = {},
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text("Beranda")
+            }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(
+                    Screen.DataPegawai.route
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Groups,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text("Pengguna")
+            }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(
+                    Screen.MonitoringAbsensi.route
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.VerifiedUser,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text("Absensi")
+            }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(
+                    Screen.Laporan.route
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Assessment,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text("Laporan")
+            }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(
+                    Screen.PengaturanAdmin.route
+                )
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.MoreHoriz,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text("Lainnya")
+            }
+        )
     }
 }

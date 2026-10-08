@@ -1,33 +1,24 @@
 package com.example.si_absen.ui.navigation
 
-import DashboardAdminScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.si_absen.auth.LoginScreen
+import androidx.navigation.navArgument
 
-// AUTH
-import com.example.si_absen.ui.auth.SplashScreen
-import com.example.si_absen.ui.auth.RegisterScreen
-import com.example.si_absen.ui.auth.ForgotPasswordScreen
-
-// ADMIN
 import com.example.si_absen.ui.admin.*
-
-// DUKUH
+import com.example.si_absen.ui.auth.*
 import com.example.si_absen.ui.dukuh.*
-
-// PEGAWAI
 import com.example.si_absen.ui.pegawai.*
+import com.example.si_absen.ui.screen.admin.DashboardAdminScreen
 
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route,
@@ -35,6 +26,7 @@ fun AppNavGraph(
     ) {
 
         // AUTH
+
         composable(Screen.Splash.route) {
             SplashScreen(navController)
         }
@@ -51,7 +43,42 @@ fun AppNavGraph(
             ForgotPasswordScreen(navController)
         }
 
+        composable(
+            route = Screen.VerifikasiOtp.route,
+            arguments = listOf(
+                navArgument("nik") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+
+            val nik = backStackEntry.arguments?.getString("nik") ?: ""
+
+            VerifikasiOtpScreen(
+                navController = navController,
+                nik = nik
+            )
+        }
+
+        composable(
+            route = Screen.UbahPassword.route,
+            arguments = listOf(
+                navArgument("nik") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+
+            val nik = backStackEntry.arguments?.getString("nik") ?: ""
+
+            UbahPasswordScreen(
+                navController = navController,
+                nik = nik
+            )
+        }
+
         // ADMIN
+
         composable(Screen.DashboardAdmin.route) {
             DashboardAdminScreen(navController)
         }
@@ -61,15 +88,28 @@ fun AppNavGraph(
         }
 
         composable(Screen.DetailPegawai.route) {
-            DetailPegawaiScreen()
+            DetailPegawaiScreen(navController)
         }
 
         composable(Screen.DataDukuh.route) {
             DataDukuhScreen(navController)
         }
 
-        composable(Screen.DetailDukuh.route) {
-            DetailDukuhScreen()
+        composable(
+            route = Screen.DetailDukuh.route,
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val id = backStackEntry.arguments?.getInt("id") ?: 1
+
+            DetailDukuhScreen(
+                navController = navController,
+                id = id
+            )
         }
 
         composable(Screen.MonitoringAbsensi.route) {
@@ -89,7 +129,7 @@ fun AppNavGraph(
         }
 
         composable(Screen.Laporan.route) {
-            LaporanScreen()
+            LaporanScreen(navController)
         }
 
         composable(Screen.PengumumanAdmin.route) {
@@ -121,6 +161,7 @@ fun AppNavGraph(
         }
 
         // DUKUH
+
         composable(Screen.DashboardDukuh.route) {
             DashboardDukuhScreen(navController)
         }
@@ -178,6 +219,7 @@ fun AppNavGraph(
         }
 
         // PEGAWAI
+
         composable(Screen.DashboardPegawai.route) {
             DashboardPegawaiScreen(navController)
         }

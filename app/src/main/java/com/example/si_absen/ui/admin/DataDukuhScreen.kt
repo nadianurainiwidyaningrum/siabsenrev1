@@ -2,37 +2,27 @@ package com.example.si_absen.ui.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.si_absen.ui.navigation.Screen
-import com.example.si_absen.ui.theme.BackgroundLight
-import com.example.si_absen.ui.theme.PrimaryBlue
-import com.example.si_absen.ui.theme.SurfaceLight
 
 data class DukuhDummy(
     val id: Int,
@@ -46,14 +36,9 @@ data class DukuhDummy(
 fun DataDukuhScreen(
     navController: NavController
 ) {
-
     var search by remember {
         mutableStateOf("")
     }
-
-    // ==========================================
-    // DATA DUMMY
-    // ==========================================
 
     val dukuhList = listOf(
         DukuhDummy(
@@ -62,21 +47,18 @@ fun DataDukuhScreen(
             wilayah = "Klepu",
             noHp = "081234567891"
         ),
-
         DukuhDummy(
             id = 2,
             nama = "Slamet Riyadi",
             wilayah = "Ngaglik",
             noHp = "081234567892"
         ),
-
         DukuhDummy(
             id = 3,
             nama = "Agus Prasetyo",
             wilayah = "Ngebel",
             noHp = "081234567893"
         ),
-
         DukuhDummy(
             id = 4,
             nama = "Rudi Hartono",
@@ -85,166 +67,249 @@ fun DataDukuhScreen(
         )
     )
 
-    // ==========================================
-    // FILTER PENCARIAN
-    // ==========================================
-
     val filteredList = dukuhList.filter {
-
         it.nama.contains(
             search,
             ignoreCase = true
         ) ||
-
                 it.wilayah.contains(
+                    search,
+                    ignoreCase = true
+                ) ||
+                it.noHp.contains(
                     search,
                     ignoreCase = true
                 )
     }
 
     Scaffold(
-
-        // ======================================
-        // TOP BAR
-        // ======================================
-
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-
             TopAppBar(
-
                 title = {
+                    Column {
+                        Text(
+                            text = "Data Dukuh",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                    Text(
-                        text = "Data Dukuh",
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                        Text(
+                            text = "Manajemen data wilayah",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             )
         },
-
-        // ======================================
-        // FLOATING ACTION BUTTON
-        // ======================================
-
         floatingActionButton = {
-
             FloatingActionButton(
-
                 onClick = {
-                    // TODO:
-                    // navigasi ke halaman tambah dukuh
+                    // TAMBAH DUKUH
                 },
-
-                containerColor = PrimaryBlue,
-
-                contentColor = SurfaceLight
-
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-
-                Text(
-                    text = "+",
-                    style = MaterialTheme.typography.titleLarge
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Tambah Dukuh"
                 )
             }
         }
-
     ) { paddingValues ->
 
-        Column(
-
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(BackgroundLight)
-                .padding(paddingValues)
-                .padding(16.dp)
-
+                .background(
+                    MaterialTheme.colorScheme.background
+                )
+                .padding(paddingValues),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = 12.dp,
+                bottom = 100.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
 
-            // ==================================
-            // TOTAL DUKUH
-            // ==================================
+            // RINGKASAN
 
-            Card(
-
-                modifier = Modifier.fillMaxWidth(),
-
-                colors = CardDefaults.cardColors(
-                    containerColor = PrimaryBlue
-                ),
-
-                shape = RoundedCornerShape(16.dp)
-
-            ) {
-
-                Column(
-
-                    modifier = Modifier.padding(16.dp)
-
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
+                        Box(
+                            modifier = Modifier
+                                .size(52.dp)
+                                .clip(
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .background(
+                                    MaterialTheme.colorScheme.onPrimary.copy(
+                                        alpha = 0.15f
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Groups,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+
+                        Spacer(
+                            modifier = Modifier.width(16.dp)
+                        )
+
+                        Column {
+                            Text(
+                                text = "Total Dukuh",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(
+                                    alpha = 0.85f
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier.height(2.dp)
+                            )
+
+                            Text(
+                                text = dukuhList.size.toString(),
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+
+                            Text(
+                                text = "Terdaftar di sistem",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(
+                                    alpha = 0.85f
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+
+            // JUDUL
+
+            item {
+                Column {
                     Text(
-                        text = "Total Dukuh",
-                        color = SurfaceLight,
-                        style = MaterialTheme.typography.bodyMedium
+                        text = "Daftar Dukuh",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
 
                     Spacer(
-                        modifier = Modifier.height(4.dp)
+                        modifier = Modifier.height(3.dp)
                     )
 
                     Text(
-                        text = "${filteredList.size}",
-                        color = SurfaceLight,
-                        style = MaterialTheme.typography.headlineMedium
+                        text = "Cari dan lihat informasi dukuh berdasarkan nama, wilayah, atau nomor HP.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
+            // PENCARIAN
 
-            // ==================================
-            // SEARCH
-            // ==================================
+            item {
+                OutlinedTextField(
+                    value = search,
+                    onValueChange = {
+                        search = it
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = "Cari nama, wilayah, atau nomor HP"
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Cari"
+                        )
+                    },
+                    trailingIcon = {
+                        if (search.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    search = ""
+                                }
+                            ) {
+                                Text(
+                                    text = "×",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    },
+                    shape = RoundedCornerShape(14.dp),
+                    singleLine = true
+                )
+            }
 
-            OutlinedTextField(
+            // JUMLAH DATA
 
-                value = search,
-
-                onValueChange = {
-                    search = it
-                },
-
-                label = {
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = "Cari Nama / Wilayah"
+                        text = "Data terdaftar",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                },
 
-                modifier = Modifier.fillMaxWidth(),
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer
+                    ) {
+                        Text(
+                            text = "${filteredList.size} dukuh",
+                            modifier = Modifier.padding(
+                                horizontal = 9.dp,
+                                vertical = 5.dp
+                            ),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+            }
 
-                shape = RoundedCornerShape(12.dp),
+            // DAFTAR DUKUH
 
-                singleLine = true
-            )
-
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
-
-            // ==================================
-            // DATA DUKUH
-            // ==================================
-
-            LazyColumn(
-
-                modifier = Modifier.fillMaxSize(),
-
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-
-            ) {
-
+            if (filteredList.isEmpty()) {
+                item {
+                    EmptyDukuhCard()
+                }
+            } else {
                 items(
                     items = filteredList,
                     key = {
@@ -252,57 +317,259 @@ fun DataDukuhScreen(
                     }
                 ) { dukuh ->
 
-                    Card(
-
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-
-                                navController.navigate(
-                                    Screen.DetailDukuh.route
+                    DukuhCard(
+                        dukuh = dukuh,
+                        onClick = {
+                            navController.navigate(
+                                Screen.DetailDukuh.createRoute(
+                                    dukuh.id
                                 )
-                            },
+                            )
+                        }
+                    )
+                }
+            }
 
-                        shape = RoundedCornerShape(16.dp),
+            // INFORMASI
 
-                        colors = CardDefaults.cardColors(
-                            containerColor = SurfaceLight
-                        ),
-
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 4.dp
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Groups,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(21.dp)
                         )
 
-                    ) {
+                        Spacer(
+                            modifier = Modifier.width(10.dp)
+                        )
 
-                        Column(
-
-                            modifier = Modifier.padding(16.dp)
-
-                        ) {
-
+                        Column {
                             Text(
-                                text = dukuh.nama,
-                                style = MaterialTheme.typography.titleMedium
+                                text = "Informasi",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold
                             )
 
                             Spacer(
-                                modifier = Modifier.height(8.dp)
+                                modifier = Modifier.height(4.dp)
                             )
 
                             Text(
-                                text = "Wilayah : ${dukuh.wilayah}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-
-                            Text(
-                                text = "No HP : ${dukuh.noHp}",
-                                style = MaterialTheme.typography.bodyMedium
+                                text = "Data dukuh dapat dikelola oleh administrator dan digunakan untuk mendukung pengelolaan wilayah serta presensi.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun DukuhCard(
+    dukuh: DukuhDummy,
+    onClick: () -> Unit
+) {
+    val colorScheme = MaterialTheme.colorScheme
+
+    val initials = dukuh.nama
+        .trim()
+        .split(" ")
+        .take(2)
+        .mapNotNull {
+            it.firstOrNull()?.uppercase()
+        }
+        .joinToString("")
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            // AVATAR
+
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .background(
+                        colorScheme.primaryContainer
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = initials,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.onPrimaryContainer
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.width(12.dp)
+            )
+
+            // INFORMASI
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = dukuh.nama,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.onSurface
+                )
+
+                Spacer(
+                    modifier = Modifier.height(7.dp)
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = null,
+                        tint = colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier.width(5.dp)
+                    )
+
+                    Text(
+                        text = dukuh.wilayah,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(
+                    modifier = Modifier.height(4.dp)
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Phone,
+                        contentDescription = null,
+                        tint = colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(14.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier.width(6.dp)
+                    )
+
+                    Text(
+                        text = dukuh.noHp,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                contentDescription = "Lihat detail",
+                tint = colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyDukuhCard() {
+    val colorScheme = MaterialTheme.colorScheme
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(54.dp)
+                    .clip(CircleShape)
+                    .background(
+                        colorScheme.surfaceVariant
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
+            Text(
+                text = "Data tidak ditemukan",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(
+                modifier = Modifier.height(4.dp)
+            )
+
+            Text(
+                text = "Coba gunakan kata kunci yang berbeda.",
+                style = MaterialTheme.typography.bodySmall,
+                color = colorScheme.onSurfaceVariant
+            )
         }
     }
 }

@@ -1,34 +1,51 @@
 package com.example.si_absen.ui.dukuh
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.Business
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.si_absen.ui.theme.BackgroundLight
-import com.example.si_absen.ui.theme.PrimaryBlue
-import com.example.si_absen.ui.theme.SuccessGreen
-import com.example.si_absen.ui.theme.SurfaceLight
-import com.example.si_absen.ui.theme.TextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilDukuhScreen() {
 
+    val colorScheme = MaterialTheme.colorScheme
+
     Scaffold(
-        containerColor = BackgroundLight,
+        containerColor = colorScheme.background,
 
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Profil Dukuh",
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Column {
+                        Text(
+                            text = "Profil Dukuh",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Text(
+                            text = "Informasi akun dan wilayah kerja",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             )
         }
@@ -39,27 +56,33 @@ fun ProfilDukuhScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
         ) {
+
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+            // PROFILE HEADER
+
             Card(
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(22.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = PrimaryBlue
-                ),
-                shape = RoundedCornerShape(20.dp)
+                    containerColor = colorScheme.primary
+                )
             ) {
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp),
+                        .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
                     Surface(
-                        modifier = Modifier.size(90.dp),
+                        modifier = Modifier.size(92.dp),
                         shape = CircleShape,
-                        color = SurfaceLight
+                        color = colorScheme.onPrimary
                     ) {
 
                         Box(
@@ -69,36 +92,80 @@ fun ProfilDukuhScreen() {
                             Text(
                                 text = "BS",
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = PrimaryBlue
+                                fontWeight = FontWeight.Bold,
+                                color = colorScheme.primary
                             )
                         }
                     }
 
                     Spacer(
-                        modifier = Modifier.height(12.dp)
+                        modifier = Modifier.height(14.dp)
                     )
 
                     Text(
                         text = "Budi Santoso",
-                        color = SurfaceLight,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = colorScheme.onPrimary
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(4.dp)
                     )
 
                     Text(
                         text = "Dukuh Dusun Klepu",
-                        color = SurfaceLight,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colorScheme.onPrimary.copy(alpha = 0.85f)
                     )
+
+                    Spacer(
+                        modifier = Modifier.height(14.dp)
+                    )
+
+                    Surface(
+                        shape = RoundedCornerShape(50.dp),
+                        color = colorScheme.onPrimary.copy(alpha = 0.15f)
+                    ) {
+
+                        Row(
+                            modifier = Modifier.padding(
+                                horizontal = 14.dp,
+                                vertical = 7.dp
+                            ),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Icon(
+                                imageVector = Icons.Default.VerifiedUser,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = colorScheme.onPrimary
+                            )
+
+                            Spacer(
+                                modifier = Modifier.width(6.dp)
+                            )
+
+                            Text(
+                                text = "Akun Aktif",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = colorScheme.onPrimary
+                            )
+                        }
+                    }
                 }
             }
 
             Spacer(
-                modifier = Modifier.height(20.dp)
+                modifier = Modifier.height(22.dp)
             )
+            // INFORMASI PRIBADI
 
-            Text(
-                text = "Informasi Pribadi",
-                style = MaterialTheme.typography.titleMedium
+            ProfileSectionTitle(
+                title = "Informasi Pribadi",
+                icon = Icons.Default.Person
             )
 
             Spacer(
@@ -107,58 +174,43 @@ fun ProfilDukuhScreen() {
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(18.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = SurfaceLight
+                    containerColor = colorScheme.surface
                 ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 3.dp
-                )
+                border = CardDefaults.outlinedCardBorder()
             ) {
 
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
 
-                    Text(
-                        text = "NIK",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
+                    ProfileInfoRow(
+                        icon = Icons.Default.Badge,
+                        label = "NIK",
+                        value = "340101"
                     )
 
-                    Text(
-                        text = "340101",
-                        style = MaterialTheme.typography.titleSmall
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 14.dp),
+                        color = colorScheme.outlineVariant
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(10.dp)
+                    ProfileInfoRow(
+                        icon = Icons.Default.Phone,
+                        label = "Nomor HP",
+                        value = "081234567890"
                     )
 
-                    Text(
-                        text = "Nomor HP",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 14.dp),
+                        color = colorScheme.outlineVariant
                     )
 
-                    Text(
-                        text = "081234567890",
-                        style = MaterialTheme.typography.titleSmall
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(10.dp)
-                    )
-
-                    Text(
-                        text = "Jabatan",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-
-                    Text(
-                        text = "Dukuh",
-                        style = MaterialTheme.typography.titleSmall
+                    ProfileInfoRow(
+                        icon = Icons.Default.Business,
+                        label = "Jabatan",
+                        value = "Dukuh"
                     )
                 }
             }
@@ -166,10 +218,11 @@ fun ProfilDukuhScreen() {
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
+            // WILAYAH KERJA
 
-            Text(
-                text = "Wilayah Kerja",
-                style = MaterialTheme.typography.titleMedium
+            ProfileSectionTitle(
+                title = "Wilayah Kerja",
+                icon = Icons.Default.LocationOn
             )
 
             Spacer(
@@ -178,81 +231,220 @@ fun ProfilDukuhScreen() {
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(18.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = SurfaceLight
+                    containerColor = colorScheme.surface
                 ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 3.dp
-                )
+                border = CardDefaults.outlinedCardBorder()
             ) {
 
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
 
-                    Text(
-                        text = "Dusun",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
+                    ProfileInfoRow(
+                        icon = Icons.Default.Place,
+                        label = "Dusun",
+                        value = "Klepu"
                     )
 
-                    Text(
-                        text = "Klepu",
-                        style = MaterialTheme.typography.titleSmall
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 14.dp),
+                        color = colorScheme.outlineVariant
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(10.dp)
+                    ProfileInfoRow(
+                        icon = Icons.Default.LocationOn,
+                        label = "Kalurahan",
+                        value = "Purwobinangun"
                     )
 
-                    Text(
-                        text = "Kalurahan",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 14.dp),
+                        color = colorScheme.outlineVariant
                     )
 
-                    Text(
-                        text = "Purwobinangun",
-                        style = MaterialTheme.typography.titleSmall
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
-                    Spacer(
-                        modifier = Modifier.height(10.dp)
-                    )
+                        Surface(
+                            modifier = Modifier.size(38.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            color = colorScheme.primaryContainer
+                        ) {
 
-                    Text(
-                        text = "Status",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
+                            Box(
+                                contentAlignment = Alignment.Center
+                            ) {
 
-                    Text(
-                        text = "Aktif",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = SuccessGreen
-                    )
+                                Icon(
+                                    imageVector = Icons.Default.VerifiedUser,
+                                    contentDescription = null,
+                                    tint = colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+
+                        Spacer(
+                            modifier = Modifier.width(12.dp)
+                        )
+
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+
+                            Text(
+                                text = "Status",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = colorScheme.onSurfaceVariant
+                            )
+
+                            Spacer(
+                                modifier = Modifier.height(2.dp)
+                            )
+
+                            Text(
+                                text = "Aktif",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = colorScheme.primary
+                            )
+                        }
+                    }
                 }
             }
 
             Spacer(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.height(20.dp)
             )
+            // AKSI
 
             Button(
                 onClick = {
-                    // edit profil
+                    // TODO: buka halaman edit profil
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = PrimaryBlue
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary
                 )
             ) {
+
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+
+                Spacer(
+                    modifier = Modifier.width(8.dp)
+                )
+
                 Text(
                     text = "Edit Profil",
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProfileSectionTitle(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(
+            modifier = Modifier.width(8.dp)
+        )
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun ProfileInfoRow(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    value: String
+) {
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Surface(
+            modifier = Modifier.size(38.dp),
+            shape = RoundedCornerShape(10.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(19.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.width(12.dp)
+        )
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(
+                modifier = Modifier.height(2.dp)
+            )
+
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }
